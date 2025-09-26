@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CILA - Modern Resume Builder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- html2pdf.js for PDF export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link rel="stylesheet" href="tailwind.css"></link>
+    <!-- Fonts for templates (optional, can be loaded via Google Fonts if needed) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Roboto+Mono:wght@400;700&family=Lato:wght@400;700&family=Playfair+Display:wght@400;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-bg-light dark:bg-bg-dark text-text-light dark:text-text-dark transition-colors duration-300">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-gradient-to-r from-blue-600 to-blue-800 dark:from-blue-700 dark:to-blue-900 shadow-md animate-slide-down no-print">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <div class="w-8 h-8 rounded-full bg-primary-light dark:bg-primary-dark flex items-center justify-center">
+                    <span class="text-white font-bold">C</span>
+                </div>
+                <span class="font-bold text-lg text-white">CILA</span>
+            </div>
+            
+            <div class="flex-1 mx-4">
+                <input type="text" id="resumeTitleInput" value="My Awesome Resume" 
+                    class="bg-transparent border-b border-gray-300 dark:border-gray-600 focus:border-primary-light dark:focus:border-primary-dark focus:outline-none text-center w-full py-1 transition-all duration-200 text-white placeholder-gray-300"
+                    placeholder="Resume Title">
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <!-- Template Switch -->
+                <div class="relative">
+                    <button id="templateSelectBtn" class="flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-card-light dark:bg-card-dark hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-200 ring-2 ring-transparent hover:ring-primary-light dark:hover:ring-primary-dark text-text-light dark:text-text-dark">
+                        <span id="currentTemplateName">Classic</span>
+                        <i class="fas fa-chevron-down text-xs"></i>
+                    </button>
+                    <div id="templateDropdown" class="absolute right-0 mt-2 w-64 bg-card-light dark:bg-card-dark rounded-lg shadow-lg py-1 z-10 hidden">
+                        <div class="grid grid-cols-2 gap-2 p-2">
+                            <div data-template="classic" class="p-2 rounded hover:bg-highlight-light dark:hover:bg-highlight-dark cursor-pointer text-text-light dark:text-text-dark">
+                                <div class="h-20 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-800 dark:to-blue-900 rounded mb-1"></div>
+                                <span class="text-sm">Classic</span>
+                            </div>
+                            <div data-template="developer" class="p-2 rounded hover:bg-highlight-light dark:hover:bg-highlight-dark cursor-pointer text-text-light dark:text-text-dark">
+                                <div class="h-20 bg-gradient-to-br from-green-100 to-green-200 dark:from-green-800 dark:to-green-900 rounded mb-1"></div>
+                                <span class="text-sm">Developer</span>
+                            </div>
+                            <div data-template="minimal" class="p-2 rounded hover:bg-highlight-light dark:hover:bg-highlight-dark cursor-pointer text-text-light dark:text-text-dark">
+                                <div class="h-20 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 rounded mb-1"></div>
+                                <span class="text-sm">Minimal</span>
+                            </div>
+                            <div data-template="creative" class="p-2 rounded hover:bg-highlight-light dark:hover:bg-highlight-dark cursor-pointer text-text-light dark:text-text-dark">
+                                <div class="h-20 bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-800 dark:to-purple-900 rounded mb-1"></div>
+                                <span class="text-sm">Creative</span>
+                            </div>
+                            <div data-template="modern" class="p-2 rounded hover:bg-highlight-light dark:hover:bg-highlight-dark cursor-pointer text-text-light dark:text-text-dark">
+                                <div class="h-20 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-slate-800 dark:to-slate-900 rounded mb-1"></div>
+                                <span class="text-sm">Modern</span>
+                            </div>
+                            <div data-template="professional" class="p-2 rounded hover:bg-highlight-light dark:hover:bg-highlight-dark cursor-pointer text-text-light dark:text-text-dark">
+                                <div class="h-20 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-950 rounded mb-1"></div>
+                                <span class="text-sm">Professional</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mood Selector -->
+                <div class="relative">
+                    <button id="moodSelectBtn" class="p-2 rounded-full hover:bg-card-light dark:hover:bg-card-dark transition-all duration-200 ring-2 ring-transparent hover:ring-primary-light dark:hover:ring-primary-dark text-text-light dark:text-text-dark">
+                        <i class="fas fa-palette"></i>
+                    </button>
+                    <div id="moodDropdown" class="absolute right-0 mt-2 w-48 bg-card-light dark:bg-card-dark rounded-lg shadow-lg py-1 z-10 hidden">
+                        <div class="px-3 py-2 text-xs uppercase text-gray-500">Mood</div>
+                        <a href="#" data-mood="hacker" class="block px-4 py-2 hover:bg-highlight-light dark:hover:bg-highlight-dark text-text-light dark:text-text-dark"><span class="w-3 h-3 rounded-full bg-green-500 inline-block mr-2"></span>Hacker</a>
+                        <a href="#" data-mood="focus" class="block px-4 py-2 hover:bg-highlight-light dark:hover:bg-highlight-dark text-text-light dark:text-text-dark"><span class="w-3 h-3 rounded-full bg-blue-500 inline-block mr-2"></span>Focus</a>
+                        <a href="#" data-mood="chill" class="block px-4 py-2 hover:bg-highlight-light dark:hover:bg-highlight-dark text-text-light dark:text-text-dark"><span class="w-3 h-3 rounded-full bg-purple-500 inline-block mr-2"></span>Chill</a>
+                        <a href="#" data-mood="street" class="block px-4 py-2 hover:bg-highlight-light dark:hover:bg-highlight-dark text-text-light dark:text-text-dark"><span class="w-3 h-3 rounded-full bg-orange-500 inline-block mr-2"></span>Street</a>
+                        <a href="#" data-mood="bold" class="block px-4 py-2 hover:bg-highlight-light dark:hover:bg-highlight-dark text-text-light dark:text-text-dark"><span class="w-3 h-3 rounded-full bg-red-500 inline-block mr-2"></span>Bold</a>
+                        <a href="#" data-mood="energetic" class="block px-4 py-2 hover:bg-highlight-light dark:hover:bg-highlight-dark text-text-light dark:text-text-dark"><span class="w-3 h-3 rounded-full bg-yellow-500 inline-block mr-2"></span>Energetic</a>
+                    </div>
+                </div>
+                
+                <!-- Theme Toggle -->
+                <button id="themeToggle" class="p-2 rounded-full hover:bg-card-light dark:hover:bg-card-dark transition-all duration-200 group text-text-light dark:text-text-dark">
+                    <i class="fas fa-moon dark:hidden"></i>
+                    <i class="fas fa-sun hidden dark:block"></i>
+                </button>
+                
+                <!-- Export Button -->
+                <button id="exportResumeBtn" class="flex items-center space-x-1 px-4 py-2 rounded-lg bg-primary-light dark:bg-primary-dark text-white hover:bg-opacity-90 transition-all duration-200 group">
+                    <span>Export</span>
+                    <i class="fas fa-download"></i>
+                    <!-- <span class="absolute -right-1 -top-1 w-4 h-4 rounded-full bg-red-500 text-white text-xs flex items-center justify-center hidden group-hover:flex">3</span> -->
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-6 flex flex-col lg:flex-row gap-6">
+        <!-- Left Panel - Form -->
+        <div class="w-full lg:w-1/2 bg-card-light dark:bg-card-dark rounded-xl p-4 shadow-sm transition-all duration-300 no-print">
+            <!-- Personal Information -->
+            <div class="mb-6">
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-user-circle mr-2 text-primary-light dark:text-primary-dark"></i>
+                    Personal Information
+                </h2>
+                
+                <div class="space-y-4">
+                    <div class="relative">
+                        <input type="text" id="fullName" placeholder=" " 
+                            class="floating-input w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-transparent focus:border-primary-light dark:focus:border-primary-dark focus:outline-none">
+                        <label for="fullName" class="floating-label">Full Name</label>
+                    </div>
+                    
+                    <div class="relative">
+                        <input type="text" id="professionalTitle" placeholder=" " 
+                            class="floating-input w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-transparent focus:border-primary-light dark:focus:border-primary-dark focus:outline-none">
+                        <label for="professionalTitle" class="floating-label">Professional Title</label>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="relative">
+                            <input type="email" id="email" placeholder=" " 
+                                class="floating-input w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-transparent focus:border-primary-light dark:focus:border-primary-dark focus:outline-none">
+                            <label for="email" class="floating-label">Email</label>
+                        </div>
+                        <div class="relative">
+                            <input type="tel" id="phone" placeholder=" " 
+                                class="floating-input w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-transparent focus:border-primary-light dark:focus:border-primary-dark focus:outline-none">
+                            <label for="phone" class="floating-label">Phone</label>
+                        </div>
+                    </div>
+                    
+                    <div class="relative">
+                        <input type="text" id="location" placeholder=" " 
+                            class="floating-input w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-transparent focus:border-primary-light dark:focus:border-primary-dark focus:outline-none">
+                        <label for="location" class="floating-label">Location</label>
+                    </div>
+                    
+                    <div class="relative">
+                        <textarea id="summary" placeholder=" " rows="3"
+                            class="floating-input w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-transparent focus:border-primary-light dark:focus:border-primary-dark focus:outline-none"></textarea>
+                        <label for="summary" class="floating-label">Professional Summary</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Projects Section -->
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold flex items-center">
+                        <i class="fas fa-project-diagram mr-2 text-primary-light dark:text-primary-dark"></i>
+                        Projects
+                    </h2>
+                    <button id="addProjectBtn" class="text-sm text-primary-light dark:text-primary-dark hover:underline flex items-center">
+                        <i class="fas fa-plus mr-1"></i> Add Project
+                    </button>
+                </div>
+                <div id="projectsContainer" class="space-y-4">
+                    <!-- Dynamic project items will be inserted here -->
+                </div>
+            </div>
+            
+            <!-- Links & Social Section -->
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold flex items-center">
+                        <i class="fas fa-link mr-2 text-primary-light dark:text-primary-dark"></i>
+                        Links & Social
+                    </h2>
+                    <button id="addLinkBtn" class="text-sm text-primary-light dark:text-primary-dark hover:underline flex items-center">
+                        <i class="fas fa-plus mr-1"></i> Add Link
+                    </button>
+                </div>
+                <div id="linksContainer" class="space-y-3">
+                    <!-- Dynamic link items will be inserted here -->
+                </div>
+            </div>
+            
+            <!-- Work Experience Section -->
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold flex items-center">
+                        <i class="fas fa-briefcase mr-2 text-primary-light dark:text-primary-dark"></i>
+                        Work Experience
+                    </h2>
+                    <button id="addExperienceBtn" class="text-sm text-primary-light dark:text-primary-dark hover:underline flex items-center">
+                        <i class="fas fa-plus mr-1"></i> Add Experience
+                    </button>
+                </div>
+                <div id="experienceContainer" class="space-y-4">
+                    <!-- Dynamic experience items will be inserted here -->
+                </div>
+            </div>
+            
+            <!-- Education Section -->
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold flex items-center">
+                        <i class="fas fa-graduation-cap mr-2 text-primary-light dark:text-primary-dark"></i>
+                        Education
+                    </h2>
+                    <button id="addEducationBtn" class="text-sm text-primary-light dark:text-primary-dark hover:underline flex items-center">
+                        <i class="fas fa-plus mr-1"></i> Add Education
+                    </button>
+                </div>
+                <div id="educationContainer" class="space-y-4">
+                    <!-- Dynamic education items will be inserted here -->
+                </div>
+            </div>
+            
+            <!-- Languages Section -->
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold flex items-center">
+                        <i class="fas fa-language mr-2 text-primary-light dark:text-primary-dark"></i>
+                        Languages
+                    </h2>
+                    <button id="addLanguageBtn" class="text-sm text-primary-light dark:text-primary-dark hover:underline flex items-center">
+                        <i class="fas fa-plus mr-1"></i> Add Language
+                    </button>
+                </div>
+                <div id="languagesContainer" class="space-y-3">
+                    <!-- Dynamic language items will be inserted here -->
+                </div>
+            </div>
+
+            <!-- Certifications Section -->
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold flex items-center">
+                        <i class="fas fa-certificate mr-2 text-primary-light dark:text-primary-dark"></i>
+                        Certifications
+                    </h2>
+                    <button id="addCertificationBtn" class="text-sm text-primary-light dark:text-primary-dark hover:underline flex items-center">
+                        <i class="fas fa-plus mr-1"></i> Add Certification
+                    </button>
+                </div>
+                <div id="certificationsContainer" class="space-y-3">
+                    <!-- Dynamic certification items will be inserted here -->
+                </div>
+            </div>
+
+            <!-- Skills Section -->
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold flex items-center">
+                        <i class="fas fa-code mr-2 text-primary-light dark:text-primary-dark"></i>
+                        Skills
+                    </h2>
+                    <button id="addSkillBtn" class="text-sm text-primary-light dark:text-primary-dark hover:underline flex items-center">
+                        <i class="fas fa-plus mr-1"></i> Add Skill
+                    </button>
+                </div>
+                <div id="skillsContainer" class="flex flex-wrap gap-2">
+                    <!-- Dynamic skill items will be inserted here -->
+                </div>
+                
+                <div class="mt-4 relative hidden" id="addSkillInputContainer">
+                    <input type="text" id="newSkillInput" placeholder="Add new skill..." 
+                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-transparent focus:border-primary-light dark:focus:border-primary-dark focus:outline-none">
+                    <button id="confirmAddSkillBtn" class="absolute right-2 top-1/2 transform -translate-y-1/2 text-primary-light dark:text-primary-dark">
+                        <i class="fas fa-check"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Reset Button -->
+            <div class="text-center mt-8">
+                <button id="resetResumeBtn" class="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-200">
+                    <i class="fas fa-redo mr-2"></i> Reset Resume
+                </button>
+            </div>
+        </div>
+        
+        <!-- Right Panel - Preview -->
+        <div class="w-full lg:w-1/2 sticky top-20 self-start">
+            <div class="bg-card-light dark:bg-card-dark rounded-xl p-4 shadow-sm mb-4 no-print">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold">Resume Preview</h2>
+                    <div class="flex space-x-2">
+                        <!-- Zoom/Expand/Print buttons (optional, not implemented in JS) -->
+                        <button class="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">
+                            <i class="fas fa-search-plus"></i>
+                        </button>
+                        <button class="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                        <button class="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700" onclick="window.print()">
+                            <i class="fas fa-print"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="flex justify-center">
+                    <div id="resumePaper" class="resume-paper p-8">
+                        <!-- Resume content will be rendered here by JavaScript -->
+                        <div id="resume-preview-content">
+                            <!-- Personal Info -->
+                            <div class="mb-8">
+                                <h1 id="previewFullName" class="text-3xl font-bold text-primary-light dark:text-primary-dark mb-1">[Your Name]</h1>
+                                <h2 id="previewProfessionalTitle" class="text-xl text-gray-600 dark:text-gray-400 mb-4">[Professional Title]</h2>
+                                
+                                <div class="flex flex-wrap gap-4 text-sm">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-envelope mr-2 text-primary-light dark:text-primary-dark"></i>
+                                        <span id="previewEmail">[Email]</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-phone mr-2 text-primary-light dark:text-primary-dark"></i>
+                                        <span id="previewPhone">[Phone]</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-map-marker-alt mr-2 text-primary-light dark:text-primary-dark"></i>
+                                        <span id="previewLocation">[Location]</span>
+                                    </div>
+                                    <div id="previewLinksContainer" class="flex items-center gap-4">
+                                        <!-- Dynamic links will appear here -->
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Summary -->
+                            <div class="mb-8">
+                                <h3 class="text-xl font-bold border-b border-gray-300 dark:border-gray-600 pb-1 mb-4 flex items-center">
+                                    <i class="fas fa-user mr-2 text-primary-light dark:text-primary-dark"></i>
+                                    Summary
+                                </h3>
+                                <p id="previewSummary" class="text-gray-800 dark:text-gray-200">
+                                    [Professional Summary]
+                                </p>
+                            </div>
+                            
+                            <!-- Experience -->
+                            <div class="mb-8">
+                                <h3 class="text-xl font-bold border-b border-gray-300 dark:border-gray-600 pb-1 mb-4 flex items-center">
+                                    <i class="fas fa-briefcase mr-2 text-primary-light dark:text-primary-dark"></i>
+                                    Experience
+                                </h3>
+                                <div id="previewExperienceContainer">
+                                    <!-- Dynamic experience will appear here -->
+                                </div>
+                            </div>
+                            
+                            <!-- Projects -->
+                            <div class="mb-8">
+                                <h3 class="text-xl font-bold border-b border-gray-300 dark:border-gray-600 pb-1 mb-4 flex items-center">
+                                    <i class="fas fa-project-diagram mr-2 text-primary-light dark:text-primary-dark"></i>
+                                    Projects
+                                </h3>
+                                <div id="previewProjectsContainer">
+                                    <!-- Dynamic projects will appear here -->
+                                </div>
+                            </div>
+
+                            <!-- Education -->
+                            <div class="mb-8">
+                                <h3 class="text-xl font-bold border-b border-gray-300 dark:border-gray-600 pb-1 mb-4 flex items-center">
+                                    <i class="fas fa-graduation-cap mr-2 text-primary-light dark:text-primary-dark"></i>
+                                    Education
+                                </h3>
+                                <div id="previewEducationContainer">
+                                    <!-- Dynamic education will appear here -->
+                                </div>
+                            </div>
+                            
+                            <!-- Languages -->
+                            <div class="mb-8">
+                                <h3 class="text-xl font-bold border-b border-gray-300 dark:border-gray-600 pb-1 mb-4 flex items-center">
+                                    <i class="fas fa-language mr-2 text-primary-light dark:text-primary-dark"></i>
+                                    Languages
+                                </h3>
+                                <div id="previewLanguagesContainer" class="space-y-3">
+                                    <!-- Dynamic languages will appear here -->
+                                </div>
+                            </div>
+
+                            <!-- Certifications -->
+                            <div class="mb-8">
+                                <h3 class="text-xl font-bold border-b border-gray-300 dark:border-gray-600 pb-1 mb-4 flex items-center">
+                                    <i class="fas fa-certificate mr-2 text-primary-light dark:text-primary-dark"></i>
+                                    Certifications
+                                </h3>
+                                <div id="previewCertificationsContainer" class="space-y-4">
+                                    <!-- Dynamic certifications will appear here -->
+                                </div>
+                            </div>
+
+                            <!-- Skills -->
+                            <div>
+                                <h3 class="text-xl font-bold border-b border-gray-300 dark:border-gray-600 pb-1 mb-4 flex items-center">
+                                    <i class="fas fa-code mr-2 text-primary-light dark:text-primary-dark"></i>
+                                    Skills
+                                </h3>
+                                <div id="previewSkillsContainer" class="flex flex-wrap gap-2">
+                                    <!-- Dynamic skills will appear here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-card-light dark:bg-card-dark rounded-xl p-4 shadow-sm no-print">
+                <h2 class="text-xl font-bold mb-4">Export Options</h2>
+                
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <button id="exportPdfBtn" class="flex flex-col items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-primary-light dark:hover:border-primary-dark hover:bg-highlight-light dark:hover:bg-highlight-dark transition-all duration-200">
+                        <i class="fas fa-file-pdf text-2xl text-red-500 mb-2"></i>
+                        <span>PDF</span>
+                    </button>
+                    <button id="exportMarkdownBtn" class="flex flex-col items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-primary-light dark:hover:border-primary-dark hover:bg-highlight-light dark:hover:bg-highlight-dark transition-all duration-200">
+                        <i class="fas fa-file-alt text-2xl text-gray-500 mb-2"></i>
+                        <span>Markdown</span>
+                    </button>
+                </div>
+                
+                <div class="flex items-center mb-4">
+                    <input type="checkbox" id="previewToggle" class="mr-2">
+                    <label for="previewToggle">Preview before export</label>
+                </div>
+                
+                <button id="mainExportBtn" class="w-full py-2 bg-primary-light dark:bg-primary-dark text-white rounded-lg hover:bg-opacity-90 transition-all duration-200 flex items-center justify-center">
+                    <i class="fas fa-download mr-2"></i>
+                    Export Resume
+                </button>
+                
+                <div class="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 mt-4">
+                    <div id="saveStatus" class="flex items-center opacity-0 transition-opacity duration-300">
+                        <i class="fas fa-check-circle mr-1 text-green-500"></i>
+                        <span>Saved!</span>
+                    </div>
+                    <div class="text-xs">
+                        <kbd class="px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded">Ctrl</kbd> + 
+                        <kbd class="px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded">E</kbd> to Export
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmationModal" class="modal">
+        <div class="modal-content">
+            <p id="modalMessage" class="mb-4 text-lg font-semibold"></p>
+            <div class="flex justify-center space-x-4">
+                <button id="confirmYesBtn" class="px-4 py-2 bg-primary-light text-white rounded-lg hover:bg-primary-dark transition-colors">Yes</button>
+                <button id="confirmNoBtn" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition-colors">No</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        
+    </script>
+</body>
+</html>

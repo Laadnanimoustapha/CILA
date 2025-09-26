@@ -1,0 +1,251 @@
+<script>
+tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            light: '#3B82F6',  // More vibrant blue
+                            dark: '#60A5FA'    // Brighter blue for dark mode
+                        },
+                        bg: {
+                            light: '#ffffff',
+                            dark: '#0F172A'    // Darker background for better contrast
+                        },
+                        text: {
+                            light: '#111827',   // Darker text for light mode
+                            dark: '#F8FAFC'    // Brighter text for dark mode
+                        },
+                        card: {
+                            light: '#F3F4F6',  // Slightly darker card
+                            dark: '#1E293B'    // Darker card for better contrast
+                        },
+                        highlight: {
+                            light: '#DBEAFE',  // More visible highlight
+                            dark: '#1E40AF'    // Deeper blue for dark mode
+                        },
+                        gradient: {
+                            blue: {
+                                start: '#3b82f6',
+                                end: '#1d4ed8'
+                            },
+                            green: {
+                                start: '#10b981',
+                                end: '#059669'
+                            },
+                            purple: {
+                                start: '#8b5cf6',
+                                end: '#7c3aed'
+                            },
+                            pink: {
+                                start: '#ec4899',
+                                end: '#db2777'
+                            },
+                            red: { // New theme gradient
+                                start: '#EF4444',
+                                end: '#DC2626'
+                            },
+                            yellow: { // New theme gradient
+                                start: '#F59E0B',
+                                end: '#D97706'
+                            }
+                        }
+                    },
+                    animation: {
+                        'slide-down': 'slideDown 0.3s ease-out',
+                        'fade-in': 'fadeIn 0.3s ease-out',
+                        'pulse-slow': 'pulse 3s infinite',
+                        'shake': 'shake 0.5s',
+                        'fade-out': 'fadeOut 0.3s ease-out forwards' // Added fade-out
+                    },
+                    keyframes: {
+                        slideDown: {
+                            '0%': { transform: 'translateY(-20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' }
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' }
+                        },
+                        fadeOut: { // Keyframe for fade-out
+                            '0%': { opacity: '1' },
+                            '100%': { opacity: '0', height: '0', margin: '0', padding: '0' }
+                        },
+                        shake: {
+                            '0%, 100%': { transform: 'translateX(0)' },
+                            '10%, 30%, 50%, 70%, 90%': { transform: 'translateX(-5px)' },
+                            '20%, 40%, 60%, 80%': { transform: 'translateX(5px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Base styles for floating labels */
+        .floating-label {
+            @apply absolute left-3 -top-2 px-1 text-xs transition-all duration-200 pointer-events-none;
+        }
+        .floating-input:focus ~ .floating-label,
+        .floating-input:not(:placeholder-shown) ~ .floating-label {
+            @apply text-primary-light dark:text-primary-dark bg-bg-light dark:bg-bg-dark transform -translate-y-0 scale-90;
+        }
+
+        /* Resume paper styling */
+        .resume-paper {
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            background: white;
+            background: linear-gradient(to bottom right, var(--tw-gradient-from), var(--tw-gradient-to));
+            --tw-gradient-from: #BFDBFE;
+            --tw-gradient-to: #EFF6FF;
+            min-height: 297mm; /* A4 height */
+            width: 210mm; /* A4 width */
+            font-family: 'Inter', sans-serif; /* Default font */
+        }
+        .dark .resume-paper {
+            background: #1e1e1e;
+            background: linear-gradient(to bottom right, var(--tw-gradient-from), var(--tw-gradient-to));
+            --tw-gradient-from: #1E40AF;
+            --tw-gradient-to: #1E3A8A;
+            color: #f1f1f1;
+        }
+
+        /* Template specific styles */
+        .resume-paper.template-developer {
+            font-family: 'Roboto Mono', monospace;
+            --tw-gradient-from: #D1FAE5;
+            --tw-gradient-to: #ECFDF5;
+        }
+        .dark .resume-paper.template-developer {
+            --tw-gradient-from: #064E3B;
+            --tw-gradient-to: #042F2E;
+        }
+
+        .resume-paper.template-minimal {
+            font-family: 'Lato', sans-serif;
+            --tw-gradient-from: #F3F4F6;
+            --tw-gradient-to: #E5E7EB;
+        }
+        .dark .resume-paper.template-minimal {
+            --tw-gradient-from: #374151;
+            --tw-gradient-to: #1F2937;
+        }
+
+        .resume-paper.template-creative {
+            font-family: 'Playfair Display', serif;
+            --tw-gradient-from: #FCE7F3;
+            --tw-gradient-to: #FBCFE8;
+        }
+        .dark .resume-paper.template-creative {
+            --tw-gradient-from: #7E22CE;
+            --tw-gradient-to: #581C87;
+        }
+
+        .resume-paper.template-modern { /* New Template */
+            font-family: 'Inter', sans-serif;
+            --tw-gradient-from: #F0F9FF;
+            --tw-gradient-to: #E0F2FE;
+        }
+        .dark .resume-paper.template-modern { /* New Template */
+            --tw-gradient-from: #0F172A;
+            --tw-gradient-to: #1E293B;
+        }
+
+        .resume-paper.template-professional { /* New Template */
+            font-family: 'Merriweather', serif;
+            --tw-gradient-from: #F8FAFC;
+            --tw-gradient-to: #E2E8F0;
+        }
+        .dark .resume-paper.template-professional { /* New Template */
+            --tw-gradient-from: #020617;
+            --tw-gradient-to: #111827;
+        }
+
+        /* Mood specific styles */
+        .mood-hacker .resume-paper h1, .mood-hacker .resume-paper .text-primary-light {
+            color: #10B981; /* Green */
+        }
+        .dark.mood-hacker .resume-paper h1, .dark.mood-hacker .resume-paper .text-primary-dark {
+            color: #34D399;
+        }
+
+        .mood-focus .resume-paper h1, .mood-focus .resume-paper .text-primary-light {
+            color: #3B82F6; /* Blue (default) */
+        }
+        .dark.mood-focus .resume-paper h1, .dark.mood-focus .resume-paper .text-primary-dark {
+            color: #60A5FA;
+        }
+
+        .mood-chill .resume-paper h1, .mood-chill .resume-paper .text-primary-light {
+            color: #8B5CF6; /* Purple */
+        }
+        .dark.mood-chill .resume-paper h1, .dark.mood-chill .resume-paper .text-primary-dark {
+            color: #A78BFA;
+        }
+
+        .mood-street .resume-paper h1, .mood-street .resume-paper .text-primary-light {
+            color: #EC4899; /* Pink */
+        }
+        .dark.mood-street .resume-paper h1, .dark.mood-street .resume-paper .text-primary-dark {
+            color: #F472B6;
+        }
+
+        .mood-bold .resume-paper h1, .mood-bold .resume-paper .text-primary-light { /* New Mood */
+            color: #EF4444; /* Red */
+        }
+        .dark.mood-bold .resume-paper h1, .dark.mood-bold .resume-paper .text-primary-dark { /* New Mood */
+            color: #F87171;
+        }
+
+        .mood-energetic .resume-paper h1, .mood-energetic .resume-paper .text-primary-light { /* New Mood */
+            color: #F59E0B; /* Yellow/Orange */
+        }
+        .dark.mood-energetic .resume-paper h1, .dark.mood-energetic .resume-paper .text-primary-dark { /* New Mood */
+            color: #FBBF24;
+        }
+
+        /* Print styles */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            .resume-paper {
+                box-shadow: none;
+                width: 100%;
+                height: 100%;
+                min-height: auto; /* Remove min-height for print */
+            }
+            body {
+                margin: 0;
+                padding: 0;
+            }
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 80%;
+            max-width: 500px;
+            text-align: center;
+        }
+        .dark .modal-content {
+            background-color: #1e293b;
+            color: #f8fafc;
+        }
+    </style>
